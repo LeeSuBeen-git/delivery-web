@@ -8,3 +8,76 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+// 1. 사용자 테이블
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String
+  name         String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  orders       Order[]
+
+  @@map("users")
+}
+
+// 2. 식당 테이블
+model Restaurant {
+  id          String     @id @default(uuid())
+  name        String
+  description String?
+  category    String     // 예: 한식, 분식, 치킨 등
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  menuItems   MenuItem[]
+  orders      Order[]
+
+  @@map("restaurants")
+}
+
+// 3. 메뉴 아이템 테이블
+model MenuItem {
+  id           String      @id @default(uuid())
+  restaurantId String
+  restaurant   Restaurant  @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  name         String
+  description  String?
+  price        Int
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  orderItems   OrderItem[]
+
+  @@map("menu_items")
+}
+
+// 4. 주문 테이블
+model Order {
+  id           String      @id @default(uuid())
+  userId       String
+  user         User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  restaurantId String
+  restaurant   Restaurant  @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  totalPrice   Int
+  status       String      @default("접수") // 기본값 "접수"
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  orderItems   OrderItem[]
+
+  @@map("orders")
+}
+
+// 5. 주문 상세 내역 테이블
+model OrderItem {
+  id         String   @id @default(uuid())
+  orderId    String
+  order      Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  menuItemId String
+  menuItem   MenuItem @relation(fields: [menuItemId], references: [id])
+  menuName   String   // 주문 당시의 메뉴명
+  quantity   Int
+  price      Int      // 주문 당시의 개별 가격
+  createdAt  DateTime @default(now())
+
+  @@map("order_items")
+}
