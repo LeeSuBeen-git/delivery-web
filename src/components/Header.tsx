@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { getCurrentUser } from '@/lib/auth';
 import LogoutButton from './LogoutButton';
+import HeaderCartLink from './HeaderCartLink';
 
 export default async function Header() {
   const user = await getCurrentUser();
@@ -15,12 +16,14 @@ export default async function Header() {
           <nav className="hidden md:flex items-center gap-6 text-sm font-medium text-zinc-300">
             <Link href="/" className="hover:text-orange-400 transition-colors">홈</Link>
             <Link href="/restaurants" className="hover:text-orange-400 transition-colors">식당 목록</Link>
+            <HeaderCartLink />
           </nav>
         </div>
 
         <div className="flex items-center gap-4">
-          <nav className="md:hidden flex items-center gap-4 text-xs text-zinc-400">
+          <nav className="md:hidden flex items-center gap-6 text-xs text-zinc-400 pr-2">
             <Link href="/restaurants" className="hover:text-orange-400 transition-colors">식당 목록</Link>
+            <HeaderCartLink />
           </nav>
 
           {user ? (

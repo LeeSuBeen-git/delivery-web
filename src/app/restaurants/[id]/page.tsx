@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import prisma from '@/lib/prisma';
+import AddToCartButton from '@/components/AddToCartButton';
 
 export const revalidate = 0; // dynamic fetch
 
@@ -84,16 +85,13 @@ export default async function RestaurantDetailPage({ params }: RestaurantDetailP
                 </div>
                 
                 <div className="flex flex-col items-start sm:items-end justify-center">
-                  <button
-                    disabled
-                    className="w-full sm:w-auto rounded-lg bg-zinc-800 px-4 py-2.5 text-xs font-semibold text-zinc-500 border border-zinc-700 cursor-not-allowed select-none transition-colors"
-                    title="다음 단계에서 장바구니 기능 연결 예정"
-                  >
-                    담기 완료 (연결 예정)
-                  </button>
-                  <span className="text-[10px] text-zinc-600 mt-1.5 block sm:text-right">
-                    * 다음 단계에서 장바구니 기능이 연동됩니다.
-                  </span>
+                  <AddToCartButton
+                    restaurantId={restaurant.id}
+                    restaurantName={restaurant.name}
+                    menuItemId={menuItem.id}
+                    name={menuItem.name}
+                    price={menuItem.price}
+                  />
                 </div>
               </div>
             ))}
