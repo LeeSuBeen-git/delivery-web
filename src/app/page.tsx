@@ -56,6 +56,15 @@ export default async function Home() {
               </div>
             </div>
           )}
+
+          <div className="mt-6 pt-6 border-t border-zinc-800/80">
+            <Link
+              href="/restaurants"
+              className="flex w-full justify-center items-center gap-1.5 rounded-lg bg-gradient-to-r from-orange-500/20 to-amber-500/20 py-3 text-sm font-semibold text-orange-400 border border-orange-500/30 hover:from-orange-500/30 hover:to-amber-500/30 hover:border-orange-500/50 transition-all"
+            >
+              🍽️ 맛있는 식당 구경하기 &rarr;
+            </Link>
+          </div>
         </div>
 
         <div className="mt-12 flex gap-4">
