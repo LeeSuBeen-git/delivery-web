@@ -1,11 +1,15 @@
 "use client";
 
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useCart } from '@/context/CartContext';
 
 export default function CartPage() {
   const { cart, updateQuantity, removeFromCart, clearCart } = useCart();
+  const router = useRouter();
+  const [submitting, setSubmitting] = useState(false);
+  const [orderError, setOrderError] = useState('');
 
   // 가격 포맷팅 헬퍼
   const formatPrice = (price: number) => {
@@ -16,6 +20,46 @@ export default function CartPage() {
   const totalPrice = cart
     ? cart.items.reduce((sum, item) => sum + item.price * item.quantity, 0)
     : 0;
+
+  // 주문 접수 처리
+  const handleOrder = async () => {
+    if (!cart || cart.items.length === 0) return;
+    setSubmitting(true);
+    setOrderError('');
+
+    try {
+      const res = await fetch('/api/orders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          restaurantId: cart.restaurantId,
+          items: cart.items,
+          totalPrice,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (res.status === 401) {
+        alert('로그인이 필요한 서비스입니다. 로그인 페이지로 이동합니다.');
+        router.push('/login');
+        return;
+      }
+
+      if (!res.ok) {
+        throw new Error(data.error || '주문 처리 중 오류가 발생했습니다.');
+      }
+
+      alert('주문이 정상적으로 접수되었습니다!');
+      clearCart(); // localStorage 비우기
+      router.push('/orders');
+      router.refresh();
+    } catch (err: any) {
+      setOrderError(err.message);
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   return (
     <div className="flex-1 bg-gradient-to-br from-zinc-950 via-zinc-900 to-zinc-950 py-12 px-4 sm:px-6 lg:px-8 text-white font-sans">
@@ -33,6 +77,12 @@ export default function CartPage() {
             </button>
           )}
         </div>
+
+        {orderError && (
+          <div className="mb-6 rounded-lg border border-red-500/20 bg-red-500/10 p-3 text-sm text-red-400">
+            {orderError}
+          </div>
+        )}
 
         {!cart || cart.items.length === 0 ? (
           <div className="text-center py-24 rounded-2xl border border-zinc-800 bg-zinc-900/20 backdrop-blur-md">
@@ -103,7 +153,7 @@ export default function CartPage() {
               ))}
             </div>
 
-            {/* 주문 요약 및 결제 요청 (아직 orders 저장은 안 됨) */}
+            {/* 주문 요약 및 결제 요청 */}
             <div className="rounded-2xl border border-zinc-800 bg-zinc-900/60 p-6 backdrop-blur-xl space-y-4">
               <div className="flex items-center justify-between text-zinc-400 text-sm">
                 <span>총 품목 수량</span>
@@ -120,14 +170,12 @@ export default function CartPage() {
               
               <div className="pt-4">
                 <button
-                  disabled
-                  className="w-full rounded-xl bg-zinc-800 py-4 text-center text-sm font-bold text-zinc-500 border border-zinc-700 cursor-not-allowed select-none transition-colors"
+                  onClick={handleOrder}
+                  disabled={submitting}
+                  className="w-full rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 py-4 text-center text-sm font-bold text-white border border-orange-400 hover:opacity-90 transition-all disabled:opacity-50 shadow-lg shadow-orange-500/20"
                 >
-                  주문하기 (다음 단계 연결 예정)
+                  {submitting ? '주문 처리 중...' : '주문하기'}
                 </button>
-                <p className="text-[11px] text-zinc-500 text-center mt-2.5">
-                  * 다음 7단계 최종 주문 저장 기능 개발 후 주문이 가능합니다.
-                </p>
               </div>
             </div>
           </div>

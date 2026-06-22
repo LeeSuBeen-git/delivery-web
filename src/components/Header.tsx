@@ -16,13 +16,15 @@ export default async function Header() {
           <nav className="hidden md:flex items-center gap-6 text-sm font-medium text-zinc-300">
             <Link href="/" className="hover:text-orange-400 transition-colors">홈</Link>
             <Link href="/restaurants" className="hover:text-orange-400 transition-colors">식당 목록</Link>
+            {user && <Link href="/orders" className="hover:text-orange-400 transition-colors">주문 내역</Link>}
             <HeaderCartLink />
           </nav>
         </div>
 
         <div className="flex items-center gap-4">
-          <nav className="md:hidden flex items-center gap-6 text-xs text-zinc-400 pr-2">
-            <Link href="/restaurants" className="hover:text-orange-400 transition-colors">식당 목록</Link>
+          <nav className="md:hidden flex items-center gap-4 text-xs text-zinc-400 pr-2">
+            <Link href="/restaurants" className="hover:text-orange-400 transition-colors">식당</Link>
+            {user && <Link href="/orders" className="hover:text-orange-400 transition-colors">주문</Link>}
             <HeaderCartLink />
           </nav>
 
