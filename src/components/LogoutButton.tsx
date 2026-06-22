@@ -30,7 +30,7 @@ export default function LogoutButton() {
     <button
       onClick={handleLogout}
       disabled={loading}
-      className="inline-flex items-center gap-1.5 rounded-lg bg-red-500/10 px-4 py-2 text-sm font-semibold text-red-400 border border-red-500/20 hover:bg-red-500/20 transition-colors disabled:opacity-50"
+      className="inline-flex items-center gap-1.5 rounded-lg bg-rose-50 px-4 py-2 text-xs font-semibold text-rose-600 border border-rose-100 hover:bg-rose-100 hover:text-rose-700 transition-colors disabled:opacity-50 cursor-pointer"
     >
       {loading ? '로그아웃 중...' : '로그아웃'}
     </button>

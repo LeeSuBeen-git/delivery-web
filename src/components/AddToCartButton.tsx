@@ -39,10 +39,10 @@ export default function AddToCartButton({
   return (
     <button
       onClick={handleAdd}
-      className={`w-full sm:w-auto rounded-lg px-4 py-2.5 text-xs font-semibold border transition-all duration-200 ${
+      className={`w-full sm:w-auto rounded-lg px-4 py-2.5 text-xs font-semibold border transition-all duration-200 cursor-pointer ${
         isAdded
-          ? 'bg-emerald-600 border-emerald-500 text-white shadow-lg shadow-emerald-600/20'
-          : 'bg-orange-500 border-orange-400 text-white hover:bg-orange-400'
+          ? 'bg-teal-600 border-teal-500 text-white shadow-lg shadow-teal-600/20'
+          : 'bg-emerald-600 border-emerald-500 text-white hover:bg-emerald-500'
       }`}
     >
       {isAdded ? '✓ 담기 완료!' : '장바구니 담기'}

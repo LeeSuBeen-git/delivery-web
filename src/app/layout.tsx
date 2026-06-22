@@ -15,8 +15,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "delivery-web",
-  description: "컴퓨터과학개론 기말 프로젝트 - 배달 웹 서비스",
+  title: "배달리스트",
+  description: "배달리스트 - 컴퓨터과학개론 기말 프로젝트",
 };
 
 export default function RootLayout({
@@ -29,7 +29,7 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-zinc-950 text-white">
+      <body className="min-h-full flex flex-col bg-slate-50 text-slate-800">
         <CartProvider>
           <Header />
           <div className="flex-grow flex flex-col">{children}</div>

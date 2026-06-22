@@ -55,25 +55,25 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-zinc-950 via-zinc-900 to-zinc-950 px-4 py-12 text-white font-sans">
-      <div className="w-full max-w-md space-y-8 rounded-2xl border border-zinc-800 bg-zinc-900/60 p-8 shadow-2xl backdrop-blur-xl">
+    <div className="flex-grow flex items-center justify-center bg-slate-50 px-4 py-16 text-zinc-800 font-sans">
+      <div className="w-full max-w-md space-y-8 rounded-2xl border border-zinc-200 bg-white p-8 shadow-sm">
         <div className="text-center">
-          <h2 className="mt-2 text-3xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-orange-400 to-amber-300">
-            delivery-web 회원가입
+          <h2 className="mt-2 text-3xl font-extrabold tracking-tight text-zinc-900">
+            배달리스트 회원가입
           </h2>
-          <p className="mt-2 text-sm text-zinc-400">
+          <p className="mt-2 text-sm text-zinc-400 font-medium">
             간단하게 가입하고 신선함을 배달받으세요
           </p>
         </div>
 
         {error && (
-          <div className="rounded-lg border border-red-500/20 bg-red-500/10 p-3 text-sm text-red-400">
+          <div className="rounded-lg border border-rose-100 bg-rose-50 p-3 text-sm text-rose-600">
             {error}
           </div>
         )}
 
         {success && (
-          <div className="rounded-lg border border-emerald-500/20 bg-emerald-500/10 p-3 text-sm text-emerald-400">
+          <div className="rounded-lg border border-emerald-100 bg-emerald-50 p-3 text-sm text-emerald-600">
             {success}
           </div>
         )}
@@ -81,7 +81,7 @@ export default function SignupPage() {
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="space-y-4 rounded-md">
             <div>
-              <label htmlFor="name" className="block text-xs font-semibold uppercase tracking-wider text-zinc-400">
+              <label htmlFor="name" className="block text-xs font-bold uppercase tracking-wider text-zinc-500">
                 이름
               </label>
               <input
@@ -91,12 +91,12 @@ export default function SignupPage() {
                 required
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="mt-1 block w-full rounded-lg border border-zinc-700 bg-zinc-800/80 px-3 py-2.5 text-white placeholder-zinc-500 focus:border-orange-500 focus:outline-none focus:ring-1 focus:ring-orange-500 sm:text-sm"
+                className="mt-1 block w-full rounded-lg border border-zinc-300 bg-white px-3 py-2.5 text-zinc-850 placeholder-zinc-450 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 sm:text-sm"
                 placeholder="홍길동"
               />
             </div>
             <div>
-              <label htmlFor="email-address" className="block text-xs font-semibold uppercase tracking-wider text-zinc-400">
+              <label htmlFor="email-address" className="block text-xs font-bold uppercase tracking-wider text-zinc-500">
                 이메일 주소
               </label>
               <input
@@ -106,12 +106,12 @@ export default function SignupPage() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="mt-1 block w-full rounded-lg border border-zinc-700 bg-zinc-800/80 px-3 py-2.5 text-white placeholder-zinc-500 focus:border-orange-500 focus:outline-none focus:ring-1 focus:ring-orange-500 sm:text-sm"
+                className="mt-1 block w-full rounded-lg border border-zinc-300 bg-white px-3 py-2.5 text-zinc-850 placeholder-zinc-450 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 sm:text-sm"
                 placeholder="example@example.com"
               />
             </div>
             <div>
-              <label htmlFor="password" className="block text-xs font-semibold uppercase tracking-wider text-zinc-400">
+              <label htmlFor="password" className="block text-xs font-bold uppercase tracking-wider text-zinc-500">
                 비밀번호
               </label>
               <input
@@ -121,12 +121,12 @@ export default function SignupPage() {
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="mt-1 block w-full rounded-lg border border-zinc-700 bg-zinc-800/80 px-3 py-2.5 text-white placeholder-zinc-500 focus:border-orange-500 focus:outline-none focus:ring-1 focus:ring-orange-500 sm:text-sm"
+                className="mt-1 block w-full rounded-lg border border-zinc-300 bg-white px-3 py-2.5 text-zinc-850 placeholder-zinc-450 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 sm:text-sm"
                 placeholder="••••••••"
               />
             </div>
             <div>
-              <label htmlFor="confirm-password" className="block text-xs font-semibold uppercase tracking-wider text-zinc-400">
+              <label htmlFor="confirm-password" className="block text-xs font-bold uppercase tracking-wider text-zinc-500">
                 비밀번호 확인
               </label>
               <input
@@ -136,7 +136,7 @@ export default function SignupPage() {
                 required
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                className="mt-1 block w-full rounded-lg border border-zinc-700 bg-zinc-800/80 px-3 py-2.5 text-white placeholder-zinc-500 focus:border-orange-500 focus:outline-none focus:ring-1 focus:ring-orange-500 sm:text-sm"
+                className="mt-1 block w-full rounded-lg border border-zinc-300 bg-white px-3 py-2.5 text-zinc-850 placeholder-zinc-450 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 sm:text-sm"
                 placeholder="••••••••"
               />
             </div>
@@ -146,16 +146,16 @@ export default function SignupPage() {
             <button
               type="submit"
               disabled={loading}
-              className="group relative flex w-full justify-center rounded-lg bg-gradient-to-r from-orange-500 to-amber-500 py-3 text-sm font-semibold text-white transition-all hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 focus:ring-offset-zinc-900 disabled:opacity-50"
+              className="group relative flex w-full justify-center rounded-lg bg-gradient-to-r from-emerald-600 to-teal-500 py-3 text-sm font-bold text-white transition-all hover:opacity-95 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 focus:ring-offset-white disabled:opacity-50 cursor-pointer shadow-sm shadow-emerald-500/10"
             >
               {loading ? '가입 중...' : '회원가입'}
             </button>
           </div>
         </form>
 
-        <div className="text-center text-sm text-zinc-400">
+        <div className="text-center text-sm text-zinc-500 font-medium">
           이미 계정이 있으신가요?{' '}
-          <Link href="/login" className="font-semibold text-orange-400 hover:text-orange-300">
+          <Link href="/login" className="font-bold text-emerald-600 hover:text-emerald-500 cursor-pointer">
             로그인하기
           </Link>
         </div>

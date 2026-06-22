@@ -20,7 +20,7 @@ export default function HeaderCartLink() {
   return (
     <Link
       href="/cart"
-      className="relative hover:text-orange-400 transition-colors flex items-center gap-1 text-sm font-medium text-zinc-300"
+      className="relative hover:text-emerald-600 transition-colors flex items-center gap-1 text-sm font-semibold text-zinc-600"
     >
       <span>장바구니</span>
       {totalItems > 0 && (
