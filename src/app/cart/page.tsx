@@ -11,6 +11,15 @@ export default function CartPage() {
   const [submitting, setSubmitting] = useState(false);
   const [orderError, setOrderError] = useState('');
 
+  // 주문 옵션 상태 관리
+  const [orderMethod, setOrderMethod] = useState<'DELIVERY' | 'TAKEOUT'>('DELIVERY');
+  const [address, setAddress] = useState('');
+  const [requestNote, setRequestNote] = useState('');
+  const [utensils, setUtensils] = useState<'YES' | 'NO'>('YES');
+  const [paymentMethod, setPaymentMethod] = useState<'PREPAID' | 'POSTPAID' | ''>('');
+  const [prepaidType, setPrepaidType] = useState<'EASY' | 'CARD' | 'BARIPAY' | 'BANK' | ''>('');
+  const [pointToUse, setPointToUse] = useState<string>('0');
+
   // 가격 포맷팅 헬퍼
   const formatPrice = (price: number) => {
     return price.toLocaleString('ko-KR') + '원';
@@ -24,6 +33,28 @@ export default function CartPage() {
   // 주문 접수 처리
   const handleOrder = async () => {
     if (!cart || cart.items.length === 0) return;
+
+    // 1. 배달 선택 시 주소 검증
+    if (orderMethod === 'DELIVERY' && !address.trim()) {
+      setOrderError('배달 주소를 입력해 주세요.');
+      alert('배달 주소를 입력해 주세요.');
+      return;
+    }
+
+    // 2. 결제 방식 검증
+    if (!paymentMethod) {
+      setOrderError('결제 방식을 선택해 주세요.');
+      alert('결제 방식을 선택해 주세요.');
+      return;
+    }
+
+    // 3. 선결제 선택 시 하위 결제수단 검증
+    if (paymentMethod === 'PREPAID' && !prepaidType) {
+      setOrderError('선결제 수단을 선택해 주세요.');
+      alert('선결제 수단을 선택해 주세요.');
+      return;
+    }
+
     setSubmitting(true);
     setOrderError('');
 
@@ -151,6 +182,188 @@ export default function CartPage() {
                   </div>
                 </div>
               ))}
+            </div>
+
+            {/* 주문 옵션 설정 섹션 */}
+            <div className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm space-y-6">
+              <h3 className="text-lg font-bold text-zinc-900 flex items-center gap-2 border-b border-zinc-100 pb-3">
+                <span>⚙️</span> 주문 옵션 설정
+              </h3>
+
+              {/* 1. 포장/배달 선택 */}
+              <div className="space-y-2">
+                <label className="text-sm font-bold text-zinc-700">주문 방식</label>
+                <div className="grid grid-cols-2 gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setOrderMethod('DELIVERY')}
+                    className={`py-3 text-center rounded-xl text-sm font-bold border transition-all cursor-pointer ${
+                      orderMethod === 'DELIVERY'
+                        ? 'bg-emerald-600 border-emerald-600 text-white shadow-sm'
+                        : 'bg-white border-zinc-200 text-zinc-600 hover:border-zinc-300'
+                    }`}
+                  >
+                    🛵 배달
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setOrderMethod('TAKEOUT')}
+                    className={`py-3 text-center rounded-xl text-sm font-bold border transition-all cursor-pointer ${
+                      orderMethod === 'TAKEOUT'
+                        ? 'bg-emerald-600 border-emerald-600 text-white shadow-sm'
+                        : 'bg-white border-zinc-200 text-zinc-600 hover:border-zinc-300'
+                    }`}
+                  >
+                    🛍️ 포장
+                  </button>
+                </div>
+              </div>
+
+              {/* 2. 배달 시 주소 및 요청사항 입력 */}
+              {orderMethod === 'DELIVERY' && (
+                <div className="space-y-4 pt-2 border-t border-zinc-100 animate-in fade-in duration-200">
+                  <div className="space-y-2">
+                    <label className="text-sm font-bold text-zinc-700">
+                      배달 주소 <span className="text-rose-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      value={address}
+                      onChange={(e) => setAddress(e.target.value)}
+                      placeholder="배달받을 주소를 입력해 주세요"
+                      className="w-full rounded-xl border border-zinc-300 bg-white px-4 py-3 text-sm text-zinc-800 placeholder-zinc-400 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 shadow-sm"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-bold text-zinc-700">배달 요청사항</label>
+                    <input
+                      type="text"
+                      value={requestNote}
+                      onChange={(e) => setRequestNote(e.target.value)}
+                      placeholder="배달 요청사항을 직접 작성해 주세요"
+                      className="w-full rounded-xl border border-zinc-300 bg-white px-4 py-3 text-sm text-zinc-800 placeholder-zinc-400 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 shadow-sm"
+                    />
+                  </div>
+                </div>
+              )}
+
+              {/* 3. 공통 사항 - 수저포크 유무 */}
+              <div className="space-y-2 pt-4 border-t border-zinc-100">
+                <label className="text-sm font-bold text-zinc-700">수저·포크 제공 유무</label>
+                <div className="grid grid-cols-2 gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setUtensils('YES')}
+                    className={`py-2.5 text-center rounded-xl text-xs font-bold border transition-all cursor-pointer ${
+                      utensils === 'YES'
+                        ? 'bg-slate-800 border-slate-800 text-white shadow-sm'
+                        : 'bg-white border-zinc-200 text-zinc-600 hover:border-zinc-300'
+                    }`}
+                  >
+                    🍴 필요해요
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setUtensils('NO')}
+                    className={`py-2.5 text-center rounded-xl text-xs font-bold border transition-all cursor-pointer ${
+                      utensils === 'NO'
+                        ? 'bg-slate-800 border-slate-800 text-white shadow-sm'
+                        : 'bg-white border-zinc-200 text-zinc-600 hover:border-zinc-300'
+                    }`}
+                  >
+                    ❌ 안 받을게요
+                  </button>
+                </div>
+              </div>
+
+              {/* 4. 결제방식 선택 */}
+              <div className="space-y-3 pt-4 border-t border-zinc-100">
+                <label className="text-sm font-bold text-zinc-700">
+                  결제 방식 <span className="text-rose-500">*</span>
+                </label>
+                <div className="grid grid-cols-2 gap-3">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setPaymentMethod('PREPAID');
+                      setPrepaidType('');
+                    }}
+                    className={`py-3 text-center rounded-xl text-sm font-bold border transition-all cursor-pointer ${
+                      paymentMethod === 'PREPAID'
+                        ? 'bg-emerald-600 border-emerald-600 text-white shadow-sm'
+                        : 'bg-white border-zinc-200 text-zinc-600 hover:border-zinc-300'
+                    }`}
+                  >
+                    💳 선결제 (앱에서 결제)
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setPaymentMethod('POSTPAID');
+                      setPrepaidType('');
+                    }}
+                    className={`py-3 text-center rounded-xl text-sm font-bold border transition-all cursor-pointer ${
+                      paymentMethod === 'POSTPAID'
+                        ? 'bg-emerald-600 border-emerald-600 text-white shadow-sm'
+                        : 'bg-white border-zinc-200 text-zinc-600 hover:border-zinc-300'
+                    }`}
+                  >
+                    💵 후결제 (만나서 결제)
+                  </button>
+                </div>
+
+                {/* 선결제 하위 결제수단 */}
+                {paymentMethod === 'PREPAID' && (
+                  <div className="grid grid-cols-4 gap-2 pt-2 animate-in fade-in duration-200">
+                    {[
+                      { id: 'EASY', label: '간편결제' },
+                      { id: 'CARD', label: '카드결제' },
+                      { id: 'BARIPAY', label: '배리페이' },
+                      { id: 'BANK', label: '계좌이체' },
+                    ].map((type) => (
+                      <button
+                        key={type.id}
+                        type="button"
+                        onClick={() => setPrepaidType(type.id as any)}
+                        className={`py-2 text-center rounded-lg text-xs font-bold border transition-all cursor-pointer ${
+                          prepaidType === type.id
+                            ? 'bg-emerald-50 border-emerald-200 text-emerald-700 font-extrabold shadow-sm'
+                            : 'bg-white border-zinc-200 text-zinc-500 hover:border-zinc-300'
+                        }`}
+                      >
+                        {type.label}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* 5. 포인트 사용 UI */}
+              <div className="space-y-2 pt-4 border-t border-zinc-100">
+                <div className="flex items-center justify-between">
+                  <label className="text-sm font-bold text-zinc-700">포인트 사용</label>
+                  <span className="text-xs text-zinc-400 font-bold">
+                    보유 0p / 100p(최소포인트사용금액)
+                  </span>
+                </div>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    disabled
+                    value={pointToUse}
+                    onChange={(e) => setPointToUse(e.target.value)}
+                    className="flex-grow rounded-xl border border-zinc-200 bg-zinc-50 px-4 py-2.5 text-sm text-zinc-400 font-semibold cursor-not-allowed outline-none"
+                  />
+                  <button
+                    type="button"
+                    disabled
+                    className="rounded-xl border border-zinc-200 bg-zinc-50 px-4 text-xs font-bold text-zinc-400 cursor-not-allowed"
+                  >
+                    전액 사용
+                  </button>
+                </div>
+                <p className="text-[10px] text-zinc-400 font-medium">※ 100p 단위 사용 가능 (최대 보유 포인트 한도 내)</p>
+              </div>
             </div>
 
             {/* 주문 요약 및 결제 요청 */}
