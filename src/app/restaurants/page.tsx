@@ -4,15 +4,26 @@ import prisma from '@/lib/prisma';
 export const revalidate = 0; // dynamic fetch
 
 interface RestaurantsPageProps {
-  searchParams: Promise<{ category?: string }>;
+  searchParams: Promise<{ category?: string; search?: string }>;
 }
 
 export default async function RestaurantsPage({ searchParams }: RestaurantsPageProps) {
-  const { category } = await searchParams;
+  const { category, search } = await searchParams;
 
-  // 카테고리가 지정되었으면 해당 카테고리 식당만 조회
+  // 카테고리 및 검색어 복합 필터
+  const where: any = {};
+  if (category) {
+    where.category = category;
+  }
+  if (search) {
+    where.name = {
+      contains: search,
+      mode: 'insensitive', // 대소문자 무시 검색
+    };
+  }
+
   const restaurants = await prisma.restaurant.findMany({
-    where: category ? { category } : undefined,
+    where,
     orderBy: { name: 'asc' },
   });
 
@@ -36,9 +47,15 @@ export default async function RestaurantsPage({ searchParams }: RestaurantsPageP
           <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl text-zinc-900">
             인기 맛집 리스트
           </h1>
-          <p className="mt-2 text-sm text-zinc-500">
-            검증된 맛집의 메뉴를 한눈에 둘러보고 주문하세요.
-          </p>
+          {search ? (
+            <p className="mt-2 text-sm text-emerald-600 font-bold">
+              🔍 '{search}' 검색 결과 ({restaurants.length}개 식당 발견)
+            </p>
+          ) : (
+            <p className="mt-2 text-sm text-zinc-500">
+              검증된 맛집의 메뉴를 한눈에 둘러보고 주문하세요.
+            </p>
+          )}
         </div>
 
         {/* 카테고리 필터 칩 */}
