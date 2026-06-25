@@ -187,7 +187,7 @@ export default function CartPage() {
             {/* 주문 옵션 설정 섹션 */}
             <div className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm space-y-6">
               <h3 className="text-lg font-bold text-zinc-900 flex items-center gap-2 border-b border-zinc-100 pb-3">
-                <span>⚙️</span> 주문 옵션 설정
+                주문 옵션 설정
               </h3>
 
               {/* 1. 포장/배달 선택 */}
@@ -203,7 +203,7 @@ export default function CartPage() {
                         : 'bg-white border-zinc-200 text-zinc-600 hover:border-zinc-300'
                     }`}
                   >
-                    🛵 배달
+                    배달
                   </button>
                   <button
                     type="button"
@@ -214,7 +214,7 @@ export default function CartPage() {
                         : 'bg-white border-zinc-200 text-zinc-600 hover:border-zinc-300'
                     }`}
                   >
-                    🛍️ 포장
+                    포장
                   </button>
                 </div>
               </div>
@@ -260,7 +260,7 @@ export default function CartPage() {
                         : 'bg-white border-zinc-200 text-zinc-600 hover:border-zinc-300'
                     }`}
                   >
-                    🍴 필요해요
+                    필요해요
                   </button>
                   <button
                     type="button"
@@ -271,7 +271,7 @@ export default function CartPage() {
                         : 'bg-white border-zinc-200 text-zinc-600 hover:border-zinc-300'
                     }`}
                   >
-                    ❌ 안 받을게요
+                    안 받을게요
                   </button>
                 </div>
               </div>
@@ -294,7 +294,7 @@ export default function CartPage() {
                         : 'bg-white border-zinc-200 text-zinc-600 hover:border-zinc-300'
                     }`}
                   >
-                    💳 선결제 (앱에서 결제)
+                    선결제 (앱에서 결제)
                   </button>
                   <button
                     type="button"
@@ -308,7 +308,7 @@ export default function CartPage() {
                         : 'bg-white border-zinc-200 text-zinc-600 hover:border-zinc-300'
                     }`}
                   >
-                    💵 후결제 (만나서 결제)
+                    후결제 (만나서 결제)
                   </button>
                 </div>
 
