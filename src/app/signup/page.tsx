@@ -7,19 +7,44 @@ import Link from 'next/link';
 export default function SignupPage() {
   const router = useRouter();
   const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
+  const [emailId, setEmailId] = useState('');
+  const [emailDomain, setEmailDomain] = useState('naver.com');
+  const [customDomain, setCustomDomain] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
 
+  const validatePassword = (pwd: string) => {
+    if (pwd.length < 8) return false;
+    const hasUppercase = /[A-Z]/.test(pwd);
+    const hasLowercase = /[a-z]/.test(pwd);
+    const hasDigit = /\d/.test(pwd);
+    const hasSpecial = /[^A-Za-z0-9]/.test(pwd);
+    return hasUppercase && hasLowercase && hasDigit && hasSpecial;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     setSuccess('');
 
-    // 비밀번호 불일치 체크
+    // 1. 이메일 주소 조합
+    const selectedDomain = emailDomain === 'custom' ? customDomain.trim() : emailDomain;
+    if (!emailId.trim() || !selectedDomain) {
+      setError('이메일 주소를 정확히 입력해 주세요.');
+      return;
+    }
+    const fullEmail = `${emailId.trim()}@${selectedDomain}`;
+
+    // 2. 비밀번호 복잡도 체크
+    if (!validatePassword(password)) {
+      setError('비밀번호는 대문자, 소문자, 숫자, 특수문자를 포함해 8자 이상이어야 합니다.');
+      return;
+    }
+
+    // 3. 비밀번호 불일치 체크
     if (password !== confirmPassword) {
       setError('비밀번호가 일치하지 않습니다.');
       return;
@@ -31,7 +56,7 @@ export default function SignupPage() {
       const res = await fetch('/api/auth/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, password }),
+        body: JSON.stringify({ name, email: fullEmail, password }),
       });
 
       const data = await res.json();
@@ -82,7 +107,7 @@ export default function SignupPage() {
           <div className="space-y-4 rounded-md">
             <div>
               <label htmlFor="name" className="block text-xs font-bold uppercase tracking-wider text-zinc-500">
-                이름
+                별명
               </label>
               <input
                 id="name"
@@ -92,24 +117,52 @@ export default function SignupPage() {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 className="mt-1 block w-full rounded-lg border border-zinc-300 bg-white px-3 py-2.5 text-zinc-850 placeholder-zinc-450 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 sm:text-sm"
-                placeholder="홍길동"
+                placeholder="예: 배고픈사자"
               />
             </div>
+
             <div>
-              <label htmlFor="email-address" className="block text-xs font-bold uppercase tracking-wider text-zinc-500">
+              <label htmlFor="email-id" className="block text-xs font-bold uppercase tracking-wider text-zinc-500">
                 이메일 주소
               </label>
-              <input
-                id="email-address"
-                name="email"
-                type="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="mt-1 block w-full rounded-lg border border-zinc-300 bg-white px-3 py-2.5 text-zinc-850 placeholder-zinc-450 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 sm:text-sm"
-                placeholder="example@example.com"
-              />
+              <div className="mt-1 flex items-center gap-2">
+                <input
+                  id="email-id"
+                  name="emailId"
+                  type="text"
+                  required
+                  value={emailId}
+                  onChange={(e) => setEmailId(e.target.value)}
+                  className="block w-full rounded-lg border border-zinc-300 bg-white px-3 py-2.5 text-zinc-800 placeholder-zinc-400 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 sm:text-sm"
+                  placeholder="example"
+                />
+                <span className="text-zinc-400 font-bold">@</span>
+                <select
+                  value={emailDomain}
+                  onChange={(e) => setEmailDomain(e.target.value)}
+                  className="block w-full rounded-lg border border-zinc-300 bg-white px-3 py-2.5 text-zinc-800 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 sm:text-sm"
+                >
+                  <option value="naver.com">naver.com</option>
+                  <option value="gmail.com">gmail.com</option>
+                  <option value="daum.net">daum.net</option>
+                  <option value="kakao.com">kakao.com</option>
+                  <option value="outlook.com">outlook.com</option>
+                  <option value="custom">직접 입력</option>
+                </select>
+              </div>
+              
+              {emailDomain === 'custom' && (
+                <input
+                  type="text"
+                  required
+                  placeholder="도메인 직접 입력 (예: school.ac.kr)"
+                  value={customDomain}
+                  onChange={(e) => setCustomDomain(e.target.value)}
+                  className="mt-2 block w-full rounded-lg border border-zinc-300 bg-white px-3 py-2.5 text-zinc-800 placeholder-zinc-450 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 sm:text-sm"
+                />
+              )}
             </div>
+
             <div>
               <label htmlFor="password" className="block text-xs font-bold uppercase tracking-wider text-zinc-500">
                 비밀번호
@@ -124,7 +177,11 @@ export default function SignupPage() {
                 className="mt-1 block w-full rounded-lg border border-zinc-300 bg-white px-3 py-2.5 text-zinc-850 placeholder-zinc-450 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 sm:text-sm"
                 placeholder="••••••••"
               />
+              <p className="mt-1.5 text-[11px] text-zinc-400 font-medium">
+                🔒 대문자, 소문자, 숫자, 특수문자를 포함해 8자 이상
+              </p>
             </div>
+
             <div>
               <label htmlFor="confirm-password" className="block text-xs font-bold uppercase tracking-wider text-zinc-500">
                 비밀번호 확인

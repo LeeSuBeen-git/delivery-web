@@ -2,13 +2,29 @@ import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { hashPassword } from '@/lib/auth';
 
+function validatePassword(password: string): boolean {
+  if (password.length < 8) return false;
+  const hasUppercase = /[A-Z]/.test(password);
+  const hasLowercase = /[a-z]/.test(password);
+  const hasDigit = /\d/.test(password);
+  const hasSpecial = /[^A-Za-z0-9]/.test(password);
+  return hasUppercase && hasLowercase && hasDigit && hasSpecial;
+}
+
 export async function POST(request: Request) {
   try {
     const { email, password, name } = await request.json();
 
     if (!email || !password || !name) {
       return NextResponse.json(
-        { error: '이메일, 비밀번호, 이름을 모두 입력해 주세요.' },
+        { error: '이메일, 비밀번호, 별명을 모두 입력해 주세요.' },
+        { status: 400 }
+      );
+    }
+
+    if (!validatePassword(password)) {
+      return NextResponse.json(
+        { error: '비밀번호는 대문자, 소문자, 숫자, 특수문자를 포함해 8자 이상이어야 합니다.' },
         { status: 400 }
       );
     }
